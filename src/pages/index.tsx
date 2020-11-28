@@ -24,6 +24,19 @@ const cast = (wall, ray, direction) => {
   const y3 = ray.y1
   const x4 = ray.x1 + direction.x
   const y4 = ray.y1 + direction.y
+
+  // Line Intersection Formula
+  // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
+  const denominator = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+
+  // Line is parralel to wall
+  if (denominator == 0) return
+
+  const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
+  const u = -((x2 - x2) * (y1 - y1) - (y1 - y2) * (x1 - x3)) / denominator
+
+  if (t > 0 && t < 1 && u > 0) return true
+  return
 }
 
 export default function Home() {
@@ -37,14 +50,21 @@ export default function Home() {
   const ray = {
     x1: 100,
     y1: 200,
-    x2: 1,
-    y2: 0,
+  }
+
+  const direction = {
+    x: 1,
+    y: 0,
   }
 
   const board = {
     width: 400,
     height: 400,
   }
+
+  const intersection = cast(wall, ray, direction)
+
+  console.log(intersection)
 
   return (
     <Wrapper>
@@ -61,7 +81,7 @@ export default function Home() {
         <Layer>
           <Ray
             position={{ x: ray.x1, y: ray.y1 }}
-            direction={{ x: ray.x2, y: ray.y2 }}
+            direction={{ x: direction.x, y: direction.y }}
           />
         </Layer>
       </Stage>
