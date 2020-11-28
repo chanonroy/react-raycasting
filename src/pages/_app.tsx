@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react'
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+function MyApp({ Component, pageProps }: { Component: any; pageProps: any }) {
+  return <Component {...pageProps} />
 }
 
-export default MyApp;
+export default MyApp
