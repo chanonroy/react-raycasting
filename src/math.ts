@@ -1,17 +1,17 @@
 export const findLineIntersection = (
-  wall,
-  ray,
-  direction
+  wall: { x1: number; y1: number; x2: number; y2: number },
+  ray: { x: number; y: number },
+  direction: [number, number]
 ): [number, number] | undefined => {
   const x1 = wall.x1
   const y1 = wall.y1
   const x2 = wall.x2
   const y2 = wall.y2
 
-  const x3 = ray.x1
-  const y3 = ray.y1
-  const x4 = ray.x1 + direction.x
-  const y4 = ray.y1 + direction.y
+  const x3 = ray.x
+  const y3 = ray.y
+  const x4 = ray.x + direction[0]
+  const y4 = ray.y + direction[1]
 
   // Line Intersection Formula
   // https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
@@ -30,12 +30,14 @@ export const findLineIntersection = (
   }
 }
 
-export const positionToNormalizeVector = (x, y) => {
+export const positionToNormalizedVector = (x, y) => {
   const length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
   return [x / length, y / length]
 }
 
-export const degreesToNormalizedVector = (degrees: number) => {
+export const degreesToNormalizedVector = (
+  degrees: number
+): [number, number] => {
   // Convert degrees to radians
   const radians = degrees * (Math.PI / 180)
 

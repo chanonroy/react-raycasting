@@ -13,9 +13,8 @@ const Ray = ({
   degrees: number
 }) => {
   const [vectorX, vectorY] = degreesToNormalizedVector(degrees)
-  const directionX = position.x + vectorX * 10
-  const directionY = position.y + vectorY * 10
-
+  const directionX = position.x + vectorX * 100
+  const directionY = position.y + vectorY * 100
   return (
     <Line
       stroke="rgb(255,255,255)"

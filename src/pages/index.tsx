@@ -1,9 +1,12 @@
 import React, { useState } from "react"
 import { Layer, Stage } from "react-konva"
 import styled from "styled-components"
+import { RayType } from "../@types"
 import Board from "../components/Board"
 import Boundary from "../components/Boundary"
 import Particle from "../components/Particle"
+import Ray from "../components/Ray"
+import { degreesToNormalizedVector, findLineIntersection } from "../math"
 
 const Wrapper = styled.div`
   display: flex;
@@ -13,6 +16,14 @@ const Wrapper = styled.div`
   align-items: center;
   background: #2f3640;
 `
+
+const getRays = (x, y): RayType[] => {
+  const rays = []
+  for (let a = 0; a < 360; a += 10) {
+    rays.push({ x, y, degrees: a })
+  }
+  return rays
+}
 
 export default function Home() {
   const [board, setBoard] = useState({
@@ -32,15 +43,10 @@ export default function Home() {
     y: board.height / 2,
   })
 
-  const [direction, setDirection] = useState({
-    x: 1,
-    y: 0.5,
-  })
-
   const onMouseMove = (e: any) => {
     // const mouseX = e.evt.layerX
     // const mouseY = e.evt.layerY
-    // const normalized = positionToNormalizeVector(mouseX - ray.x1, mouseY - ray.y1)
+    // const normalized = positionToNormalizedVector(mouseX - ray.x1, mouseY - ray.y1)
     // setDirection({
     //   x: normalized[0],
     //   y: normalized[1],
@@ -48,6 +54,26 @@ export default function Home() {
   }
 
   // const intersection = findLineIntersection(wall, rays[0], direction)
+
+  const computeRays = () => {
+    const rays = getRays(particle.x, particle.y)
+
+    for (const i in rays) {
+      const intersectionPoint = findLineIntersection(
+        wall,
+        rays[i],
+        degreesToNormalizedVector(rays[i].degrees)
+      )
+      if (intersectionPoint) {
+        const [pointX, pointY] = intersectionPoint
+        rays[i].x2 = pointX
+        rays[i].y2 = pointY
+      }
+    }
+    return rays
+  }
+
+  const computedRays = computeRays()
 
   return (
     <Wrapper>
@@ -65,7 +91,20 @@ export default function Home() {
             end={{ x: wall.x2, y: wall.y2 }}
           />
         </Layer>
-        <Particle position={{ x: particle.x, y: particle.y }} />
+        <Layer>
+          {/* Show rays that eminate around particle */}
+          <Particle position={{ x: particle.x, y: particle.y }} />
+          {!!computedRays.length &&
+            computedRays.map((ray) => {
+              return (
+                <Ray
+                  key={ray.degrees}
+                  position={{ x: ray.x, y: ray.y }}
+                  degrees={ray.degrees}
+                />
+              )
+            })}
+        </Layer>
       </Stage>
     </Wrapper>
   )
