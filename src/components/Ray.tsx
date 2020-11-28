@@ -20,8 +20,8 @@ const Ray = ({
       points={[
         position.x,
         position.y,
-        position.x + direction.x * 10,
-        position.y + direction.y * 10,
+        position.x + direction.x,
+        position.y + direction.y,
       ]}
     />
   )

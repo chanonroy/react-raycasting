@@ -1,5 +1,5 @@
-import React from "react"
-import { Layer, Stage } from "react-konva"
+import React, { useState } from "react"
+import { Circle, Layer, Stage } from "react-konva"
 import styled from "styled-components"
 import Board from "../components/Board"
 import Boundary from "../components/Boundary"
@@ -35,40 +35,69 @@ const cast = (wall, ray, direction) => {
   const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denominator
   const u = -((x2 - x2) * (y1 - y1) - (y1 - y2) * (x1 - x3)) / denominator
 
-  if (t > 0 && t < 1 && u > 0) return true
-  return
+  if (t > 0 && t < 1 && u > 0) {
+    const point = {
+      x: x1 + t * (x2 - x1),
+      y: y1 + t * (y2 - y1),
+    }
+    return point
+  } else {
+    return
+  }
+}
+
+const normalizeVector = (x, y) => {
+  const length = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2))
+  return [x / length, y / length]
 }
 
 export default function Home() {
-  const wall = {
+  const [wall, setWall] = useState({
     x1: 300,
     y1: 100,
     x2: 300,
     y2: 300,
-  }
+  })
 
-  const ray = {
+  const [ray, setRay] = useState({
     x1: 100,
     y1: 200,
-  }
+  })
 
-  const direction = {
+  const [direction, setDirection] = useState({
     x: 1,
-    y: 0,
-  }
+    y: 0.5,
+  })
 
-  const board = {
+  const [board, setBoard] = useState({
     width: 400,
     height: 400,
+  })
+
+  const onMouseMove = (e: any) => {
+    const mouseX = e.evt.layerX
+    const mouseY = e.evt.layerY
+
+    const newX = mouseX - ray.x1
+    const newY = mouseY - ray.y1
+
+    const normalized = normalizeVector(newX, newY)
+
+    setDirection({
+      x: normalized[0],
+      y: normalized[1],
+    })
   }
 
   const intersection = cast(wall, ray, direction)
 
-  console.log(intersection)
-
   return (
     <Wrapper>
-      <Stage width={board.width} height={board.height}>
+      <Stage
+        onMouseMove={onMouseMove}
+        width={board.width}
+        height={board.height}
+      >
         <Layer>
           <Board width={board.width} height={board.height} color="black" />
         </Layer>
@@ -81,9 +110,19 @@ export default function Home() {
         <Layer>
           <Ray
             position={{ x: ray.x1, y: ray.y1 }}
-            direction={{ x: direction.x, y: direction.y }}
+            direction={{ x: direction.x * 10, y: direction.y * 10 }}
           />
         </Layer>
+        {intersection && (
+          <Layer>
+            <Circle
+              radius={10}
+              fill="yellow"
+              x={intersection.x}
+              y={intersection.y}
+            />
+          </Layer>
+        )}
       </Stage>
     </Wrapper>
   )
