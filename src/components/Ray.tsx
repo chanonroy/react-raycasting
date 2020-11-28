@@ -1,25 +1,18 @@
 import React from "react"
 import { Line } from "react-konva"
+import { RayType } from "../@types"
 import { degreesToNormalizedVector } from "../math"
 
-const Ray = ({
-  position,
-  degrees,
-}: {
-  position: {
-    x: number
-    y: number
-  }
-  degrees: number
-}) => {
+const Ray = ({ ray }: { ray: RayType }) => {
+  const { degrees, x, y, x2, y2 } = ray
   const [vectorX, vectorY] = degreesToNormalizedVector(degrees)
-  const directionX = position.x + vectorX * 100
-  const directionY = position.y + vectorY * 100
+  const endX = x2 ?? x + vectorX * 400
+  const endY = y2 ?? y + vectorY * 400
   return (
     <Line
-      stroke="rgb(255,255,255)"
+      stroke="rgb(255,255,255, 0.5)"
       strokeWidth={1}
-      points={[position.x, position.y, directionX, directionY]}
+      points={[x, y, endX, endY]}
     />
   )
 }

@@ -19,7 +19,7 @@ const Wrapper = styled.div`
 
 const getRays = (x, y): RayType[] => {
   const rays = []
-  for (let a = 0; a < 360; a += 10) {
+  for (let a = 0; a < 360; a += 1) {
     rays.push({ x, y, degrees: a })
   }
   return rays
@@ -96,13 +96,7 @@ export default function Home() {
           <Particle position={{ x: particle.x, y: particle.y }} />
           {!!computedRays.length &&
             computedRays.map((ray) => {
-              return (
-                <Ray
-                  key={ray.degrees}
-                  position={{ x: ray.x, y: ray.y }}
-                  degrees={ray.degrees}
-                />
-              )
+              return <Ray key={ray.degrees} ray={ray} />
             })}
         </Layer>
       </Stage>
