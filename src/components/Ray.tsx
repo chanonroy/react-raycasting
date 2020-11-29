@@ -6,8 +6,9 @@ import { degreesToNormalizedVector } from "../math"
 const Ray = ({ ray }: { ray: RayType }) => {
   const { degrees, x, y, x2, y2 } = ray
   const [vectorX, vectorY] = degreesToNormalizedVector(degrees)
-  const endX = x2 ?? x + vectorX * 400
-  const endY = y2 ?? y + vectorY * 400
+  const endX = x2 ?? x + vectorX * 1000
+  const endY = y2 ?? y + vectorY * 1000
+
   return (
     <Line
       stroke="rgb(255,255,255, 0.5)"

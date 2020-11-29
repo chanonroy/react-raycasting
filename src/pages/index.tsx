@@ -6,7 +6,11 @@ import Board from "../components/Board"
 import Boundary from "../components/Boundary"
 import Particle from "../components/Particle"
 import Ray from "../components/Ray"
-import { degreesToNormalizedVector, findLineIntersection } from "../math"
+import {
+  degreesToNormalizedVector,
+  findLineIntersection,
+  vectorDistance,
+} from "../math"
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,44 +35,63 @@ export default function Home() {
     height: 400,
   })
 
-  const [wall, setWall] = useState({
-    x1: 300,
-    y1: 100,
-    x2: 300,
-    y2: 300,
-  })
+  const walls = [
+    {
+      x1: 250,
+      y1: 100,
+      x2: 200,
+      y2: 300,
+    },
+    {
+      x1: 100,
+      y1: 200,
+      x2: 400,
+      y2: 125,
+    },
+  ]
 
   const [particle, setParticle] = useState({
-    x: board.width / 2,
+    // x: board.width / 2,
+    x: 400,
     y: board.height / 2,
   })
 
   const onMouseMove = (e: any) => {
-    // const mouseX = e.evt.layerX
-    // const mouseY = e.evt.layerY
-    // const normalized = positionToNormalizedVector(mouseX - ray.x1, mouseY - ray.y1)
-    // setDirection({
-    //   x: normalized[0],
-    //   y: normalized[1],
-    // })
+    setParticle({
+      x: e.evt.layerX,
+      y: e.evt.layerY,
+    })
   }
-
-  // const intersection = findLineIntersection(wall, rays[0], direction)
 
   const computeRays = () => {
     const rays = getRays(particle.x, particle.y)
 
+    // Go through each Ray
     for (const i in rays) {
-      const intersectionPoint = findLineIntersection(
-        wall,
-        rays[i],
-        degreesToNormalizedVector(rays[i].degrees)
-      )
-      if (intersectionPoint) {
-        const [pointX, pointY] = intersectionPoint
-        rays[i].x2 = pointX
-        rays[i].y2 = pointY
+      let closest = null
+      let globalDist = Infinity
+
+      // Find closest intercept from all the walls
+      for (const wall of walls) {
+        const intersectionPoint = findLineIntersection(
+          wall,
+          rays[i],
+          degreesToNormalizedVector(rays[i].degrees)
+        )
+        if (intersectionPoint) {
+          const [intX, intY] = intersectionPoint
+          const localDist = vectorDistance(
+            [particle.x, particle.y],
+            [intX, intY]
+          )
+          if (localDist < globalDist) {
+            globalDist = localDist
+            closest = intersectionPoint
+          }
+        }
       }
+      rays[i].x2 = closest ? closest[0] : undefined
+      rays[i].y2 = closest ? closest[1] : undefined
     }
     return rays
   }
@@ -86,10 +109,13 @@ export default function Home() {
           <Board width={board.width} height={board.height} color="black" />
         </Layer>
         <Layer>
-          <Boundary
-            start={{ x: wall.x1, y: wall.y1 }}
-            end={{ x: wall.x2, y: wall.y2 }}
-          />
+          {walls.map((wall, i) => (
+            <Boundary
+              key={i}
+              start={{ x: wall.x1, y: wall.y1 }}
+              end={{ x: wall.x2, y: wall.y2 }}
+            />
+          ))}
         </Layer>
         <Layer>
           {/* Show rays that eminate around particle */}
