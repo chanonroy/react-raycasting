@@ -19,7 +19,7 @@ const Wrapper = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: #2f3640;
+  background: #1e272e;
 `
 
 const getRays = (x, y): RayType[] => {
