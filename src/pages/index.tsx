@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Layer, Stage } from "react-konva"
+import { Layer, Rect, Stage } from "react-konva"
 import styled from "styled-components"
 import { RayType } from "../@types"
 import Board from "../components/Board"
@@ -9,13 +9,14 @@ import Ray from "../components/Ray"
 import {
   degreesToNormalizedVector,
   findLineIntersection,
+  rangeMap,
   vectorDistance,
 } from "../math"
 
 const Wrapper = styled.div`
   display: flex;
   height: 100vh;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   background: #2f3640;
@@ -23,7 +24,7 @@ const Wrapper = styled.div`
 
 const getRays = (x, y): RayType[] => {
   const rays = []
-  for (let a = 0; a < 360; a += 1) {
+  for (let a = 0; a < 40; a += 1) {
     rays.push({ x, y, degrees: a })
   }
   return rays
@@ -34,6 +35,9 @@ export default function Home() {
     width: 400,
     height: 400,
   })
+
+  const sceneWidth = 400
+  const sceneHeight = 400
 
   const walls = [
     {
@@ -66,10 +70,12 @@ export default function Home() {
   const computeRays = () => {
     const rays = getRays(particle.x, particle.y)
 
+    const scene = []
+
     // Go through each Ray
     for (const i in rays) {
-      let closest = null
-      let globalDist = Infinity
+      let closestIntersection = null
+      let longestDistanceSeen = Infinity
 
       // Find closest intercept from all the walls
       for (const wall of walls) {
@@ -80,52 +86,91 @@ export default function Home() {
         )
         if (intersectionPoint) {
           const [intX, intY] = intersectionPoint
-          const localDist = vectorDistance(
+          const localDistance = vectorDistance(
             [particle.x, particle.y],
             [intX, intY]
           )
-          if (localDist < globalDist) {
-            globalDist = localDist
-            closest = intersectionPoint
+          if (localDistance < longestDistanceSeen) {
+            longestDistanceSeen = localDistance
+            closestIntersection = intersectionPoint
           }
         }
       }
-      rays[i].x2 = closest ? closest[0] : undefined
-      rays[i].y2 = closest ? closest[1] : undefined
+      if (closestIntersection) {
+        scene[i] = longestDistanceSeen
+        rays[i].x2 = closestIntersection[0]
+        rays[i].y2 = closestIntersection[1]
+      } else {
+        scene[i] = Infinity
+        rays[i].x2 = undefined
+        rays[i].y2 = undefined
+      }
     }
-    return rays
+    return { rays, scene }
   }
 
-  const computedRays = computeRays()
+  const { rays: computedRays, scene } = computeRays()
 
   return (
     <Wrapper>
-      <Stage
-        onMouseMove={onMouseMove}
-        width={board.width}
-        height={board.height}
-      >
-        <Layer>
-          <Board width={board.width} height={board.height} color="black" />
-        </Layer>
-        <Layer>
-          {walls.map((wall, i) => (
-            <Boundary
-              key={i}
-              start={{ x: wall.x1, y: wall.y1 }}
-              end={{ x: wall.x2, y: wall.y2 }}
-            />
-          ))}
-        </Layer>
-        <Layer>
-          {/* Show rays that eminate around particle */}
-          <Particle position={{ x: particle.x, y: particle.y }} />
-          {!!computedRays.length &&
-            computedRays.map((ray) => {
-              return <Ray key={ray.degrees} ray={ray} />
+      <div style={{ marginLeft: 40 }}>
+        <h2 style={{ textAlign: "center", color: "white" }}>2D Render</h2>
+        <Stage
+          onMouseMove={onMouseMove}
+          width={board.width}
+          height={board.height}
+        >
+          <Layer>
+            <Board width={board.width} height={board.height} color="black" />
+          </Layer>
+          <Layer>
+            {walls.map((wall, i) => (
+              <Boundary
+                key={i}
+                start={{ x: wall.x1, y: wall.y1 }}
+                end={{ x: wall.x2, y: wall.y2 }}
+              />
+            ))}
+          </Layer>
+          <Layer>
+            {/* Show rays that eminate around particle */}
+            <Particle position={{ x: particle.x, y: particle.y }} />
+            {!!computedRays.length &&
+              computedRays.map((ray) => {
+                return <Ray key={ray.degrees} ray={ray} />
+              })}
+          </Layer>
+        </Stage>
+      </div>
+
+      <div style={{ marginLeft: 40 }}>
+        <h2 style={{ textAlign: "center", color: "white" }}>3D Render</h2>
+        <Stage width={sceneWidth} height={sceneHeight}>
+          <Layer>
+            <Board width={sceneWidth} height={sceneHeight} color="black" />
+          </Layer>
+          <Layer>
+            {scene.map((s, i) => {
+              const w = sceneWidth / scene.length
+              const b = rangeMap(scene[i], 0, sceneWidth, 1, 0)
+              // const h = rangeMap(scene[i], 0, sceneWidth, sceneHeight, 0)
+              if (s === Infinity) return
+              return (
+                <Rect
+                  key={i}
+                  fill={"white"}
+                  opacity={b}
+                  x={i * w + w / 2}
+                  y={0}
+                  strokeEnabled={false}
+                  width={w}
+                  height={sceneHeight}
+                />
+              )
             })}
-        </Layer>
-      </Stage>
+          </Layer>
+        </Stage>
+      </div>
     </Wrapper>
   )
 }

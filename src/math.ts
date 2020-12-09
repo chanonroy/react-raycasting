@@ -50,5 +50,15 @@ export const degreesToNormalizedVector = (
 }
 
 export const vectorDistance = ([x1, y1], [x2, y2]) => {
-  return Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)
+  return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+}
+
+// map function in p5.js
+export const rangeMap = (n, start1, stop1, start2, stop2) => {
+  const newval = ((n - start1) / (stop1 - start1)) * (stop2 - start2) + start2
+  if (start2 < stop2) {
+    return Math.max(Math.min(newval, stop2), start2)
+  } else {
+    return Math.max(Math.min(newval, start2), stop2)
+  }
 }
