@@ -151,20 +151,20 @@ export default function Home() {
           </Layer>
           <Layer>
             {scene.map((s, i) => {
-              const w = sceneWidth / scene.length
-              const b = rangeMap(scene[i], 0, sceneWidth, 1, 0)
-              // const h = rangeMap(scene[i], 0, sceneWidth, sceneHeight, 0)
+              const renderItemWidth = sceneWidth / scene.length
+              const distanceOpacity = rangeMap(scene[i], 0, sceneWidth, 1, 0)
+              const h = rangeMap(scene[i], 0, sceneWidth, sceneHeight, 0)
               if (s === Infinity) return
               return (
                 <Rect
                   key={i}
                   fill={"white"}
-                  opacity={b}
-                  x={i * w + w / 2}
-                  y={0}
+                  opacity={distanceOpacity}
+                  x={i * renderItemWidth + renderItemWidth / 2}
+                  y={sceneHeight / 10}
                   strokeEnabled={false}
-                  width={w}
-                  height={sceneHeight}
+                  width={renderItemWidth}
+                  height={h}
                 />
               )
             })}
