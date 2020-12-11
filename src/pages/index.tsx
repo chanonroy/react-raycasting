@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Layer, Rect, Stage } from "react-konva"
 import styled from "styled-components"
 import { RayType } from "../@types"
@@ -8,6 +8,7 @@ import Particle from "../components/Particle"
 import Ray from "../components/Ray"
 import {
   degreesToNormalizedVector,
+  degreesToRadians,
   findLineIntersection,
   rangeMap,
   vectorDistance,
@@ -22,10 +23,10 @@ const Wrapper = styled.div`
   background: #1e272e;
 `
 
-const getRays = (x, y): RayType[] => {
+const getRays = (x, y, heading): RayType[] => {
   const rays = []
   for (let a = 0; a < 40; a += 1) {
-    rays.push({ x, y, degrees: a })
+    rays.push({ x, y, degrees: a + heading })
   }
   return rays
 }
@@ -35,6 +36,27 @@ export default function Home() {
     width: 400,
     height: 400,
   })
+
+  const [heading, setHeading] = useState(0)
+
+  const handleUserKeyPress = (event) => {
+    const { key } = event
+    if (key === "a") {
+      // Rotate Left
+      setHeading(heading + 3.5)
+    }
+    if (key === "d") {
+      // Rotate right
+      setHeading(heading - 3.5)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleUserKeyPress)
+    return () => {
+      window.removeEventListener("keydown", handleUserKeyPress)
+    }
+  }, [handleUserKeyPress])
 
   const sceneWidth = 400
   const sceneHeight = 400
@@ -56,8 +78,8 @@ export default function Home() {
 
   const [particle, setParticle] = useState({
     // x: board.width / 2,
-    x: 400,
-    y: board.height / 2,
+    x: 20,
+    y: 20,
   })
 
   const onMouseMove = (e: any) => {
@@ -68,7 +90,7 @@ export default function Home() {
   }
 
   const computeRays = () => {
-    const rays = getRays(particle.x, particle.y)
+    const rays = getRays(particle.x, particle.y, heading)
 
     const scene = []
 
@@ -114,6 +136,7 @@ export default function Home() {
   return (
     <Wrapper>
       <div style={{ marginLeft: 40 }}>
+        {/* 2D Maze */}
         <h2 style={{ textAlign: "center", color: "white" }}>2D Render</h2>
         <Stage
           onMouseMove={onMouseMove}
@@ -143,6 +166,7 @@ export default function Home() {
         </Stage>
       </div>
 
+      {/* 3D Maze */}
       <div style={{ marginLeft: 40 }}>
         <h2 style={{ textAlign: "center", color: "white" }}>3D Render</h2>
         <Stage width={sceneWidth} height={sceneHeight}>

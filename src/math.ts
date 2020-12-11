@@ -62,3 +62,7 @@ export const rangeMap = (n, start1, stop1, start2, stop2) => {
     return Math.max(Math.min(newval, start2), stop2)
   }
 }
+
+export const degreesToRadians = (degrees) => {
+  return (degrees * Math.PI) / 180
+}
