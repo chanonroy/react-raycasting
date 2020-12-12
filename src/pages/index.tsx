@@ -209,7 +209,7 @@ export default function Home() {
         <div style={{ marginTop: 40, marginBottom: 20 }}>
           Use A to look LEFT | Move mouse to MOVE | Use D to look RIGHT
         </div>
-        <div>d
+        <div>
           <button onClick={() => setWalls(generateWalls(3))}>
             Random Walls
           </button>
