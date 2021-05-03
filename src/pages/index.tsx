@@ -16,7 +16,7 @@ import {
 const Background = styled.div`
   height: 100vh;
   align-items: center;
-  background: #1e272e;
+  background: #1d1d1e;
 `
 
 const GameContainer = styled.div`
@@ -140,63 +140,119 @@ export default function Home() {
       <GameContainer>
         <div style={{ marginLeft: 40 }}>
           {/* 2D Maze */}
-          <h2 style={{ textAlign: "center", color: "white" }}>2D Render</h2>
-          <Stage
-            onMouseMove={onMouseMove}
-            width={board.width}
-            height={board.height}
+          <div
+            style={{
+              fontSize: 25,
+              fontWeight: "bold",
+              textAlign: "center",
+              color: "white",
+              marginBottom: 5,
+            }}
           >
-            <Layer>
-              <Board width={board.width} height={board.height} color="black" />
-            </Layer>
-            <Layer>
-              {walls.map((wall, i) => (
-                <Boundary
-                  key={i}
-                  start={{ x: wall.x1, y: wall.y1 }}
-                  end={{ x: wall.x2, y: wall.y2 }}
+            2D Render
+          </div>
+          <div
+            style={{
+              color: "lightgrey",
+              textAlign: "center",
+              marginBottom: 20,
+            }}
+          >
+            Hover your mouse here
+          </div>
+          <div style={{ border: "5px solid white" }}>
+            <Stage
+              onMouseMove={onMouseMove}
+              width={board.width}
+              height={board.height}
+            >
+              <Layer>
+                <Board
+                  width={board.width}
+                  height={board.height}
+                  color="#1D1D1E"
                 />
-              ))}
-            </Layer>
-            <Layer>
-              {/* Show rays that eminate around particle */}
-              <Particle position={{ x: particle.x, y: particle.y }} />
-              {!!computedRays.length &&
-                computedRays.map((ray) => {
-                  return <Ray key={ray.degrees} ray={ray} />
-                })}
-            </Layer>
-          </Stage>
+              </Layer>
+              <Layer>
+                {walls.map((wall, i) => (
+                  <Boundary
+                    key={i}
+                    start={{ x: wall.x1, y: wall.y1 }}
+                    end={{ x: wall.x2, y: wall.y2 }}
+                  />
+                ))}
+              </Layer>
+              <Layer>
+                {/* Show rays that eminate around particle */}
+                <Particle position={{ x: particle.x, y: particle.y }} />
+                {!!computedRays.length &&
+                  computedRays.map((ray) => {
+                    return <Ray key={ray.degrees} ray={ray} />
+                  })}
+              </Layer>
+            </Stage>
+          </div>
         </div>
 
         {/* 3D Maze */}
         <div style={{ marginLeft: 40 }}>
-          <h2 style={{ textAlign: "center", color: "white" }}>3D Render</h2>
-          <Stage width={sceneWidth} height={sceneHeight}>
-            <Layer>
-              <Board width={sceneWidth} height={sceneHeight} color="black" />
-            </Layer>
-            <Layer>
-              {scene.map((s, i) => {
-                const renderItemWidth = sceneWidth / scene.length
-                const distanceOpacity = rangeMap(scene[i], 0, sceneWidth, 1, 0)
-                const h = rangeMap(scene[i], 0, sceneWidth, sceneHeight, 0)
-                if (s === Infinity) return
-                return (
-                  <Rect
-                    key={i}
-                    fill={"white"}
-                    opacity={distanceOpacity}
-                    x={i * renderItemWidth + renderItemWidth / 2}
-                    y={sceneHeight / 10}
-                    strokeEnabled={false}
-                    width={renderItemWidth}
-                    height={h}
-                  />
-                )
-              })}
-            </Layer>
-          </Stage>
+          <div
+            style={{
+              fontSize: 25,
+              fontWeight: "bold",
+              textAlign: "center",
+              color: "white",
+              marginBottom: 5,
+            }}
+          >
+            3D Render
+          </div>
+          <div
+            style={{
+              color: "lightgrey",
+              textAlign: "center",
+              marginBottom: 20,
+            }}
+          >
+            See the results here
+          </div>
+          <div style={{ border: "5px solid white" }}>
+            <Stage width={sceneWidth} height={sceneHeight}>
+              <Layer>
+                <Board
+                  width={sceneWidth}
+                  height={sceneHeight}
+                  color="#1D1D1E"
+                />
+              </Layer>
+              <Layer>
+                {scene.map((s, i) => {
+                  const renderItemWidth = sceneWidth / scene.length
+                  const distanceOpacity = rangeMap(
+                    scene[i],
+                    0,
+                    sceneWidth,
+                    1,
+                    0
+                  )
+                  const h = rangeMap(scene[i], 0, sceneWidth, sceneHeight, 0)
+                  if (s === Infinity) return
+                  return (
+                    <Rect
+                      key={i}
+                      fill={"white"}
+                      opacity={distanceOpacity}
+                      x={i * renderItemWidth + renderItemWidth / 2}
+                      y={sceneHeight / 10}
+                      strokeEnabled={false}
+                      width={renderItemWidth}
+                      height={h}
+                    />
+                  )
+                })}
+              </Layer>
+            </Stage>
+          </div>
         </div>
       </GameContainer>
       <strong> </strong>
@@ -206,13 +262,23 @@ export default function Home() {
           color: "white",
         }}
       >
-        <div style={{ marginTop: 40, marginBottom: 20 }}>
+        <div style={{ marginTop: 40, marginBottom: 30 }}>
           Use A to look LEFT | Move mouse to MOVE | Use D to look RIGHT
         </div>
-        <div>
-          <button onClick={() => setWalls(generateWalls(3))}>
-            Random Walls
-          </button>
+        <div
+          style={{
+            color: "white",
+            padding: "20px 40px",
+            border: "1px solid white",
+            display: "inline-block",
+            borderRadius: 10,
+            margin: "0 auto",
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+          onClick={() => setWalls(generateWalls(3))}
+        >
+          Randomize Walls
         </div>
       </div>
     </Background>
