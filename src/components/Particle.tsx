@@ -9,9 +9,7 @@ const Particle = ({
     y: number
   }
 }) => {
-  return (
-    <Circle fill="rgb(255,255,255)" radius={5} x={position.x} y={position.y} />
-  )
+  return <Circle fill="#00C2CB" radius={5} x={position.x} y={position.y} />
 }
 
 export default Particle
