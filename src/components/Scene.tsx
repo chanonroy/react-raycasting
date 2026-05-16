@@ -40,19 +40,31 @@ const Scene = ({
       <Layer listening={false}>
         {scene.map((s, i) => {
           if (s === Infinity) return null
-          const distanceOpacity = rangeMap(s, 0, BOARD_SIZE, 1, 0)
+          const brightness = rangeMap(s, 0, BOARD_SIZE, 1, 0)
           const barHeight = rangeMap(s, 0, BOARD_SIZE, height, 0)
+          const x = i * barWidth
+          const y = horizonY - barHeight / 2
+          const w = barWidth + 1
           return (
-            <Rect
-              key={i}
-              fill={theme.bar}
-              opacity={Math.max(0, distanceOpacity)}
-              x={i * barWidth}
-              y={horizonY - barHeight / 2}
-              width={barWidth + 1}
-              height={barHeight}
-              strokeEnabled={false}
-            />
+            <React.Fragment key={i}>
+              <Rect
+                fill={theme.bar}
+                x={x}
+                y={y}
+                width={w}
+                height={barHeight}
+                strokeEnabled={false}
+              />
+              <Rect
+                fill="black"
+                opacity={Math.max(0, 1 - brightness)}
+                x={x}
+                y={y}
+                width={w}
+                height={barHeight}
+                strokeEnabled={false}
+              />
+            </React.Fragment>
           )
         })}
       </Layer>

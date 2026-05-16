@@ -128,11 +128,17 @@ const Seg = styled.button<{ active: boolean }>`
   }
 `
 
+const Hints = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-right: 4px;
+`
+
 const Hint = styled.div`
   color: rgba(255, 255, 255, 0.4);
   font-size: 11px;
   letter-spacing: 0.04em;
-  margin-right: 4px;
   white-space: nowrap;
 `
 
@@ -164,7 +170,10 @@ const HoverBar = ({
   onRandomize,
 }: Props) => (
   <Bar>
-    <Hint>A · D to look</Hint>
+    <Hints>
+      <Hint>A · D to look</Hint>
+      <Hint>Mouse over map to move</Hint>
+    </Hints>
     <Divider />
     <Group>
       <Label>
