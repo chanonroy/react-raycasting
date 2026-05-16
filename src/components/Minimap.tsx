@@ -1,4 +1,3 @@
-import type { KonvaEventObject } from "konva/lib/Node"
 import React from "react"
 import { Layer, Stage } from "react-konva"
 import { RayType } from "../@types"
@@ -18,37 +17,25 @@ const Minimap = ({
   rays,
   particle,
   theme,
-  onMove,
 }: {
   size: number
   walls: Wall[]
   rays: RayType[]
   particle: { x: number; y: number }
   theme: Theme
-  onMove: (p: { x: number; y: number }) => void
 }) => {
   const scale = size / BOARD_SIZE
 
-  const handleMouseMove = (e: KonvaEventObject<MouseEvent>) => {
-    const { layerX, layerY } = e.evt
-    onMove({ x: layerX / scale, y: layerY / scale })
-  }
-
   return (
-    <Stage
-      width={size}
-      height={size}
-      scale={{ x: scale, y: scale }}
-      onMouseMove={handleMouseMove}
-    >
-      <Layer>
+    <Stage width={size} height={size} scale={{ x: scale, y: scale }}>
+      <Layer listening={false}>
         <Board
           width={BOARD_SIZE}
           height={BOARD_SIZE}
           color={theme.background}
         />
       </Layer>
-      <Layer>
+      <Layer listening={false}>
         {walls.map((w, i) => (
           <Boundary
             key={i}

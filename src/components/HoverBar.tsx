@@ -129,17 +129,24 @@ const Seg = styled.button<{ active: boolean }>`
 `
 
 const Hints = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 2px 8px;
   margin-right: 4px;
+  white-space: nowrap;
 `
 
-const Hint = styled.div`
+const Keys = styled.span`
+  font-family: ui-monospace, Menlo, monospace;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+`
+
+const HintLabel = styled.span`
   color: rgba(255, 255, 255, 0.4);
   font-size: 11px;
   letter-spacing: 0.04em;
-  white-space: nowrap;
 `
 
 type Props = {
@@ -171,8 +178,12 @@ const HoverBar = ({
 }: Props) => (
   <Bar>
     <Hints>
-      <Hint>A · D to look</Hint>
-      <Hint>Mouse over map to move</Hint>
+      <Keys>W · S</Keys>
+      <HintLabel>move</HintLabel>
+      <Keys>A · D</Keys>
+      <HintLabel>strafe</HintLabel>
+      <Keys>Q · E</Keys>
+      <HintLabel>turn</HintLabel>
     </Hints>
     <Divider />
     <Group>
