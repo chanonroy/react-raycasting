@@ -46,8 +46,7 @@ const MinimapWrap = styled.div<{ visible: boolean; accent: string }>`
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45),
-    0 0 0 1px ${(p) => p.accent}22;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px ${(p) => p.accent}22;
   opacity: ${(p) => (p.visible ? 1 : 0)};
   transform: translateY(${(p) => (p.visible ? "0" : "12px")});
   pointer-events: ${(p) => (p.visible ? "auto" : "none")};
@@ -164,12 +163,7 @@ export default function Home() {
 
   return (
     <Stage background={theme.background}>
-      <Scene
-        scene={scene}
-        width={viewportW}
-        height={viewportH}
-        theme={theme}
-      />
+      <Scene scene={scene} width={viewportW} height={viewportH} theme={theme} />
       <Vignette />
 
       <MinimapWrap visible={showMinimap} accent={theme.accent}>

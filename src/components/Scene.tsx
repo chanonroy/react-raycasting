@@ -22,7 +22,13 @@ const Scene = ({
   return (
     <Stage width={width} height={height} listening={false}>
       <Layer listening={false}>
-        <Rect x={0} y={0} width={width} height={horizonY} fill={theme.ceiling} />
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={horizonY}
+          fill={theme.ceiling}
+        />
         <Rect
           x={0}
           y={horizonY}
