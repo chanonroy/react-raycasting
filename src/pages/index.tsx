@@ -274,7 +274,13 @@ export default function Home() {
 
   return (
     <Stage background={theme.background}>
-      <Scene scene={scene} width={viewportW} height={viewportH} theme={theme} />
+      <Scene
+        scene={scene}
+        width={viewportW}
+        height={viewportH}
+        fov={fov}
+        theme={theme}
+      />
       <Vignette />
 
       <MinimapWrap visible={showMinimap} accent={theme.accent}>
