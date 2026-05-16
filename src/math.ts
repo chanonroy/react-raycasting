@@ -66,3 +66,28 @@ export const rangeMap = (n, start1, stop1, start2, stop2) => {
 export const degreesToRadians = (degrees) => {
   return (degrees * Math.PI) / 180
 }
+
+// Returns the closest intersection point along segment A (from a1 to a2)
+// that hits segment B (b1 to b2), or null if there's no hit.
+export const segmentIntersect = (
+  a1: [number, number],
+  a2: [number, number],
+  b1: [number, number],
+  b2: [number, number]
+): [number, number] | null => {
+  const [x1, y1] = a1
+  const [x2, y2] = a2
+  const [x3, y3] = b1
+  const [x4, y4] = b2
+
+  const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4)
+  if (denom === 0) return null
+
+  const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom
+  const u = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denom
+
+  if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+    return [x1 + t * (x2 - x1), y1 + t * (y2 - y1)]
+  }
+  return null
+}

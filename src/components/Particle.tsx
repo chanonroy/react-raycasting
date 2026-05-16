@@ -3,13 +3,12 @@ import { Circle } from "react-konva"
 
 const Particle = ({
   position,
+  color = "#00C2CB",
 }: {
-  position: {
-    x: number
-    y: number
-  }
+  position: { x: number; y: number }
+  color?: string
 }) => {
-  return <Circle fill="#00C2CB" radius={5} x={position.x} y={position.y} />
+  return <Circle fill={color} radius={5} x={position.x} y={position.y} />
 }
 
 export default Particle
